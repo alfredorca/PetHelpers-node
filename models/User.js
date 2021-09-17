@@ -1,6 +1,6 @@
 const { model, Schema } = require("mongoose");
 const crypto = require("crypto");
-const {uuid} = require('uuidv4')
+const { uuid } = require("uuidv4");
 
 const UserSchema = Schema({
   name: {
@@ -22,26 +22,26 @@ const UserSchema = Schema({
   role: {
     type: String,
     enum: ["PROVIDER", "USER"],
-    default: 'USER'
+    default: "USER",
   },
-  pet: {
-    type: Schema.Types.ObjectId
-  }
+  pets: {
+    type: [Schema.Types.ObjectId],
+  },
 });
 
-UserSchema.virtual('password')
-.set(function(password) {
-  this._password = password;
-  this.salt = uuid();
-  this.hashed_password = this.encryptPassword(password);
-})
-.get(function() {
-  return this._password
-});
+UserSchema.virtual("password")
+  .set(function (password) {
+    this._password = password;
+    this.salt = uuid();
+    this.hashed_password = this.encryptPassword(password);
+  })
+  .get(function () {
+    return this._password;
+  });
 
 UserSchema.methods = {
   authenticate: function (text) {
-    return this.encryptPassword(text) === this.hashed_password
+    return this.encryptPassword(text) === this.hashed_password;
   },
 
   encryptPassword: function (password) {
@@ -52,9 +52,9 @@ UserSchema.methods = {
         .update(password)
         .digest("hex");
     } catch (error) {
-      return 'error could not encrypt';
+      return "error could not encrypt";
     }
   },
 };
 
-module.exports = model('User', UserSchema);
+module.exports = model("User", UserSchema);

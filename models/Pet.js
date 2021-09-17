@@ -9,6 +9,10 @@ const PetSchema = Schema(
       type: Schema.Types.ObjectId,
       ref: "Species",
       required: [true, "You must enter the species of your pet."]
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref:"Owner"
     }
   }
 )

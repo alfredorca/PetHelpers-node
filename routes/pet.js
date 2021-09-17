@@ -1,5 +1,6 @@
 const express = require('express');
 const Pet = require('../models/Pet');
+const User = require('../models/User');
 const router = express.Router();
 
 //GET all pets
@@ -24,10 +25,16 @@ router.get('/pet/:id', async (req, res) => {
 })
 
 //POST Pet 
-router.post('/pet', async (req, res) => {
+router.post('/pet/:userId', async (req, res) => {
   const petToRegister = await Pet.create(req.body);
+  const updateUser = await User.findById(req.params.userId);
   try {
-    return res.status(201).json(petToRegister);
+    res.status(201).json(petToRegister);
+    const {_id} = petToRegister
+    let previousPets = updateUser.pets;
+    updateUser.pets = [...previousPets, _id];
+    updateUser.save()
+    return;
   } catch (error) {
     return res.status(500).json({message: "Could not register pet"})
   }
