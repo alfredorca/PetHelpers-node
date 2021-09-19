@@ -16,15 +16,13 @@ mongoose
   .catch(() => console.log("Error conecting to MONGO"));
 
 //set up middlewares
+
 app.use(cors({
   origin: process.env.FRONTEND_POINT,
   credentials: true
 }
 )); //CROSS ORIGIN RESOURCE SHARING
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-})
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
@@ -43,6 +41,7 @@ app.use("/api/species", require("./routes/species"));
 app.use("/api/services", require("./routes/service"));
 app.use("/api/offers", require("./routes/offer"));
 app.use("/api/auth", require("./routes/authentication.js"));
+app.use("/api/users", require("./routes/user"));
 
 //listen to server in a prot
 const port = process.env.PORT;
