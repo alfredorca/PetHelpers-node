@@ -5,7 +5,7 @@ const router = express.Router();
 
 //GET all pets
 router.get('/', async (req, res) => {
-  const pets = await Pet.find()
+  const pets = await Pet.find().populate('type')
   try {
     return res.status(200).json(pets)
   } catch (error) {
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 //GET single pet
 router.get('/pet/:id', async (req, res) => {
   const {id} = req.params;
-  const singlePet = await Pet.findById(id);
+  const singlePet = await Pet.findById(id)
   try {
     return res.status(200).json(singlePet);
   } catch (error) {

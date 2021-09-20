@@ -1,10 +1,11 @@
 const express = require("express");
+const { populate } = require("../models/User");
 const Users = require("../models/User");
 const router = express.Router();
 
 //GET ALL USERS
 router.get("/", async (req, res) => {
-  const users = await Users.find();
+  const users = await Users.find().populate("pets");
   try {
     return res.status(200).json(users);
   } catch (error) {
@@ -15,7 +16,25 @@ router.get("/", async (req, res) => {
 //GET Single User
 router.get("/user/:id", async (req, res) => {
   const { id } = req.params;
-  const user = await Users.findById(id);
+  const user = await Users.findById(id).populate([
+    {
+      path: 'pets',
+      model: 'Pet',
+      select: 'name',
+      populate: {
+        path: 'name'
+      }
+    }
+    ,{
+      path: 'pets',
+      model: 'Pet',
+      select: 'type',
+      populate: {
+        path: 'type',
+        model: "Species"
+      }
+    }
+  ]);
   try {
     return res.status(200).json(user);
   } catch (error) {
